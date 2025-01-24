@@ -12,6 +12,4 @@ const contributionSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-const Contribution = mongoose.model('Contribution', contributionSchema);
-
-module.exports = Contribution;
+module.exports = mongoose.model('Contribution', contributionSchema);
