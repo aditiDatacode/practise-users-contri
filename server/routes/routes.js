@@ -5,11 +5,11 @@ const {
 
 const router = express.Router();
 
-// router.get('/student/:id', getStudent)
-// router.get('/students', getAllStudents)
-// router.post('/student', createStudent)
-// router.patch('/student/:id', updateStudent)
-// router.delete('/student/:id', deleteStudent)
+router.get('/user/:id', getUser)
+router.get('/users', getAllUsers)
+router.post('/user', createUser)
+router.patch('/user/:id', updateUser)
+router.delete('/user/:id', deleteUser)
 
 // router.get('/exam/:id', getExam)
 // router.get('/exams', getAllExams)
@@ -19,7 +19,7 @@ const router = express.Router();
 
 // router.get('/accounts', getAllAccounts)
 // router.get('/account/:id', getAccount) // accID
-// router.post('/account/:id', createStudentAccount) // studID 
+// router.post('/account/:id', createUserAccount) // studID 
 // router.patch('/account/:id', updateAccount)
 // router.delete('/account/:id', deleteAccount)
 
