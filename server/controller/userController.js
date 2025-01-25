@@ -16,16 +16,22 @@ const createUser = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching user', error: error.message });
+  if (!req.user) {
+    res.status(404).json({ success: false, message: 'User not found' });
   }
+  res.status(200).json({ success: true, user: req.user });
+
+
+  // const { id } = req.params;
+  // try {
+  //   const user = await User.findById(id);
+  //   if (!user) {
+  //     return res.status(404).json({ success: false, message: 'User not found' });
+  //   }
+  //   res.status(200).json({ success: true, user });
+  // } catch (error) {
+  //   res.status(500).json({ success: false, message: 'Error fetching user', error: error.message });
+  // }
 };
 
 const updateUserById = async (req, res) => {
@@ -128,7 +134,6 @@ const updateContribution = async (req, res) => {
 
 const deleteContribution = async (req, res) => {
   // const { ids } = req.params;
-
   const { query: { ids } } = req;
   if (!ids) {
     return res.status(400).json({ success: false, message: 'No IDs provided' });
@@ -153,7 +158,44 @@ const deleteContribution = async (req, res) => {
 };
 
 
+// GROUPS
+const createGroup = async (req, res) => {
+  const { name, description, users } = req.body;
+
+  if (!name || !description || !users) {
+    return res.status(400).json({ success: false, message: 'Name, description, and users are required' });
+  }
+
+  try {
+    const newGroup = new Group({ name, description, users });
+    await newGroup.save();
+    res.status(201).json({
+      success: true,
+      message: 'Group created successfully',
+      group: newGroup,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error creating group',
+      error: error.message,
+    });
+  }
+
+}
+
+const getAllGroups = async (req, res) => {
+  try {
+    const groups = await Group.find().populate('user');
+    res.status(200).json({ success: true, groups });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching groups', error: error.message });
+  }
+}
+
+
 module.exports = {
   createUser, getUserById, updateUserById, deleteUserById, getAllUsers,
   createContribution, getContribution, updateContribution, deleteContribution, getAllContributions,
+  createGroup, getAllGroups
 }

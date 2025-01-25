@@ -2,12 +2,14 @@ const express = require("express");
 const {
     createUser, getUserById, updateUserById, deleteUserById, getAllUsers,
     createContribution, getContribution, updateContribution, deleteContribution, getAllContributions,
+    createGroup, getAllGroups
 }
     = require("../controller/userController.js");
+const { ifUserExists } = require("../middlewares/ifExists.js")
 
 const router = express.Router();
 
-router.get('/user/:id', getUserById)
+router.get('/user/:id', ifUserExists, getUserById)
 router.get('/users', getAllUsers)
 router.post('/user', createUser)
 router.patch('/user/:id', updateUserById)
@@ -19,11 +21,11 @@ router.post('/contribution', createContribution)
 router.patch('/contribution/:id', updateContribution)
 router.delete('/contribution', deleteContribution)
 
-// router.get('/accounts', getAllAccounts)
-// router.get('/account/:id', getAccount) // accID
-// router.post('/account/:id', createUserAccount) // studID 
-// router.patch('/account/:id', updateAccount)
-// router.delete('/account/:id', deleteAccount)
+router.get('/groups', getAllGroups)
+// router.get('/group/:id', getGroup) // accID
+router.post('/group', createGroup) // studID 
+// router.patch('/group/:id', updateGroup)
+// router.delete('/group/:id', deleteGroup)
 
 
 module.exports = router;
