@@ -53,7 +53,6 @@ const updateContribution = async (req, res) => {
 };
 
 const deleteContribution = async (req, res) => {
-  // const { ids } = req.params;
   const { query: { ids } } = req;
   if (!ids) {
     return res.status(400).json({ success: false, message: 'No IDs provided' });

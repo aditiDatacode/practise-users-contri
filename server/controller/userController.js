@@ -18,8 +18,7 @@ const getUserById = async (req, res) => {
 };
 
 const updateUserById = async (req, res) => {
-  const { user } = req;
-  const { body: { username, email } } = req;
+  const { body: { username, email }, user } = req;
   try {
     user.username = username;
     user.email = email

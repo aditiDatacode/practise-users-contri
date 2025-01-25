@@ -1,30 +1,20 @@
 const Group = require('../model/Groups.js');
 
-
-// GROUPS
 const createGroup = async (req, res) => {
     const { name, description, users } = req.body;
-
-    if (!name || !description || !users) {
-        return res.status(400).json({ success: false, message: 'Name, description, and users are required' });
-    }
-
     try {
+        // whether to check if every userID exist in cluster ?
         const newGroup = new Group({ name, description, users });
         await newGroup.save();
-        res.status(201).json({
-            success: true,
-            message: 'Group created successfully',
-            group: newGroup,
-        });
+        res.status(201).json({ success: true, message: 'Group created successfully', group: newGroup, });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error creating group',
-            error: error.message,
-        });
+        res.status(500).json({ success: false, message: 'Error creating group', error: error.message, });
     }
+}
 
+const getGroup = async (req, res) => {
+    const { group } = req
+    res.status(200).json({ success: true, group });
 }
 
 const getAllGroups = async (req, res) => {
@@ -36,6 +26,32 @@ const getAllGroups = async (req, res) => {
     }
 }
 
+const updateGroup = async (req, res) => {
+    const { body: { name, description, users }, group, params: { id } } = req;
+    try {
+        group.name = name
+        group.description = description
+        group.users = users
+        const update = await group.save({ validateBeforeSave: true });
+        if (!update) {
+            return res.status(404).json({ success: false, message: 'Some grp update error' });
+        }
+        res.status(200).json({ success: true, message: 'grp updated successfully', user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error updating grp', error: error.message });
+    }
+}
+
+const deleteGroup = async (req, res) => {
+    const { group } = req;
+    try {
+        await group.delete();
+        res.status(200).json({ success: true, message: 'grp deleted successfully', group });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error deleting grp', error: error.message });
+    }
+}
+
 module.exports = {
-    createGroup, getAllGroups
+    createGroup, getAllGroups, getGroup, updateGroup, deleteGroup
 }
