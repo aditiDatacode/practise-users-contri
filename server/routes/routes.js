@@ -5,15 +5,15 @@ const {
     createGroup, getAllGroups
 }
     = require("../controller/userController.js");
-const { ifUserExists } = require("../middlewares/ifExists.js")
+const { ifUserIDExists, ifUserExists } = require("../middlewares/ifExists.js")
 
 const router = express.Router();
 
-router.get('/user/:id', ifUserExists, getUserById)
+router.get('/user/:id', ifUserIDExists, getUserById)
 router.get('/users', getAllUsers)
-router.post('/user', createUser)
-router.patch('/user/:id', updateUserById)
-router.delete('/user/:id', deleteUserById)
+router.post('/user', ifUserExists, createUser)
+router.patch('/user/:id', ifUserIDExists, updateUserById)
+router.delete('/user/:id', ifUserIDExists, deleteUserById)
 
 router.get('/contribution/:id', getContribution)
 router.get('/contributions', getAllContributions)

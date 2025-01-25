@@ -1,6 +1,6 @@
 const User = require('../model/Users.js')
 
-const ifUserExists = async (req, res, next) => {
+const ifUserIDExists = async (req, res, next) => {
   const { params: { id } } = req
   try {
     const user = await User.findById(id);
@@ -14,4 +14,18 @@ const ifUserExists = async (req, res, next) => {
   }
 }
 
-module.exports = { ifUserExists }
+const ifUserExists = async (req, res, next) => {
+  const { body: { username, email } } = req
+  try {
+    const user = await User.findOne({ username, email });
+    if (user) {
+      return res.status(400).json({ success: false, message: 'User already exists' });
+    }
+    next()
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error creating user', error: error.message });
+  }
+}
+
+// being exported as an object because {}, if not then as fn
+module.exports = { ifUserIDExists, ifUserExists }

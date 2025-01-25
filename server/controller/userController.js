@@ -16,49 +16,29 @@ const createUser = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  if (!req.user) {
-    res.status(404).json({ success: false, message: 'User not found' });
-  }
   res.status(200).json({ success: true, user: req.user });
-
-
-  // const { id } = req.params;
-  // try {
-  //   const user = await User.findById(id);
-  //   if (!user) {
-  //     return res.status(404).json({ success: false, message: 'User not found' });
-  //   }
-  //   res.status(200).json({ success: true, user });
-  // } catch (error) {
-  //   res.status(500).json({ success: false, message: 'Error fetching user', error: error.message });
-  // }
 };
 
 const updateUserById = async (req, res) => {
-  const { id } = req.params;
-  const { username, email } = req.body;
+  const { user } = req;
+  const { body: { username, email } } = req;
   try {
-    const user = await User.findByIdAndUpdate(
-      id,
-      { username, email },
-      { new: true, runValidators: true }
-    );
+    user.username = username || user.username;
+    user.email = email || user.email;
+    const updatedUser = await user.save();
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    res.status(200).json({ success: true, message: 'User updated successfully', user });
+    res.status(200).json({ success: true, message: 'User updated successfully', user: updatedUser });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error updating user', error: error.message });
   }
 };
 
 const deleteUserById = async (req, res) => {
-  const { id } = req.params;
+  const { user } = req;
   try {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    await user.delete();
     res.status(200).json({ success: true, message: 'User deleted successfully', user });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error deleting user', error: error.message });
