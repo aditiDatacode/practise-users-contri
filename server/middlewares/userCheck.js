@@ -8,6 +8,7 @@ const ifUserIDExists = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
     req.user = user
+    console.log("Inside User Middleware: ", id)
     next()
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching user', error: error.message });

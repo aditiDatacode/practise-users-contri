@@ -1,11 +1,9 @@
 const express = require("express");
-const {
-    createUser, getUserById, updateUserById, deleteUserById, getAllUsers,
-    createContribution, getContribution, updateContribution, deleteContribution, getAllContributions,
-    createGroup, getAllGroups
-}
-    = require("../controller/userController.js");
-const { ifUserIDExists, ifUserExists } = require("../middlewares/ifExists.js")
+const { createUser, getUserById, updateUserById, deleteUserById, getAllUsers, } = require("../controller/userController.js");
+const { createContribution, getContribution, updateContribution, deleteContribution, getAllContributions, } = require("../controller/contriController.js");
+const { createGroup, getAllGroups } = require("../controller/groupController.js");
+const { ifUserIDExists, ifUserExists } = require("../middlewares/userCheck.js")
+const { ifContriExists } = require("../middlewares/contriCheck.js")
 
 const router = express.Router();
 
@@ -17,8 +15,8 @@ router.delete('/user/:id', ifUserIDExists, deleteUserById)
 
 router.get('/contribution/:id', getContribution)
 router.get('/contributions', getAllContributions)
-router.post('/contribution', createContribution)
-router.patch('/contribution/:id', updateContribution)
+router.post('/contribution/:id', ifUserIDExists, createContribution) // userId
+router.patch('/contribution/:id', ifUserIDExists, ifContriExists, updateContribution) // contriId
 router.delete('/contribution', deleteContribution)
 
 router.get('/groups', getAllGroups)
@@ -26,6 +24,5 @@ router.get('/groups', getAllGroups)
 router.post('/group', createGroup) // studID 
 // router.patch('/group/:id', updateGroup)
 // router.delete('/group/:id', deleteGroup)
-
 
 module.exports = router;
